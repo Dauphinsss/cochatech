@@ -1,18 +1,32 @@
 ---
 import '../styles/global.css';
+import { AyniApp } from '@/components/ayni/ayni-app';
 
 ---
 
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<link
+			rel="preconnect"
+			href="https://fonts.googleapis.com"
+		/>
+		<link
+			rel="preconnect"
+			href="https://fonts.gstatic.com"
+			crossorigin="anonymous"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<title>Ayni.</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<AyniApp client:only="react" />
 	</body>
 </html>
