@@ -1,0 +1,51 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e53]:
+      - banner [ref=e54]:
+        - generic [ref=e55]:
+          - text: Ayni
+          - paragraph [ref=e56]: Segunda opinión financiera, al momento de decidir.
+        - button "Abrir menú" [ref=e57] [cursor=pointer]:
+          - img [ref=e58]
+          - generic [ref=e59]: Abrir menú
+      - main [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - paragraph [ref=e63]: Contexto activo
+            - heading "¿Qué decisión estás pensando?" [level=1] [ref=e64]
+            - paragraph [ref=e65]: Te quedan libres Bs 1.100 este mes.
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - textbox [ref=e68]
+              - generic:
+                - generic: ¿compro el celular a crédito?
+              - button "Ver" [ref=e69] [cursor=pointer]
+            - paragraph [ref=e70]: "Ejemplo: crédito, pasanaku, préstamo, viaje."
+          - generic [ref=e71]:
+            - button "¿compro el celular a crédito de Bs 3500?" [ref=e72] [cursor=pointer]
+            - button "¿me sumo al pasanaku de Bs 300 al mes?" [ref=e73] [cursor=pointer]
+            - button "¿acepto el préstamo de Bs 8000 de la cooperativa para emprender?" [ref=e74] [cursor=pointer]
+            - button "¿me animo al viaje con los panas?" [ref=e75] [cursor=pointer]
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - heading "Últimas consultas" [level=2] [ref=e78]
+          - button "Ver todas" [ref=e79] [cursor=pointer]
+        - generic [ref=e82]:
+          - paragraph [ref=e83]: Todavía vacío
+          - paragraph [ref=e84]: Cuando guardes decisiones, aparecerán acá para compararlas.
+    - region "Notifications alt+T"
+  - generic [ref=e29]:
+    - button "Menu" [ref=e30]:
+      - img [ref=e32]
+      - generic: Menu
+    - button "Inspect" [ref=e36]:
+      - img [ref=e38]
+      - generic: Inspect
+    - button "Audit" [ref=e40]:
+      - generic [ref=e41]:
+        - img [ref=e42]
+        - img [ref=e45]
+      - generic: Audit
+    - button "Settings" [ref=e48]:
+      - img [ref=e50]
+      - generic: Settings

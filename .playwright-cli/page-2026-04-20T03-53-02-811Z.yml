@@ -1,0 +1,49 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e309]:
+      - button "Nueva consulta" [ref=e310] [cursor=pointer]:
+        - img [ref=e311]
+        - text: Nueva consulta
+      - generic [ref=e313]:
+        - paragraph [ref=e315]: ¿Comprar el celular a crédito?
+        - generic [ref=e316]:
+          - paragraph [ref=e317]: Veredicto
+          - generic [ref=e319]: ESPERA
+          - paragraph [ref=e320]: Te da gusto hoy, pero te aprieta el próximo mes.
+          - paragraph [ref=e321]: Basado en lo que ganas, gastas y ya tienes comprometido.
+        - generic [ref=e324]:
+          - paragraph [ref=e325]: El por qué
+          - paragraph [ref=e326]: Con Bs 4500 al mes, Bs 2800 en gastos fijos y Bs 600 ya comprometidos, te quedan Bs 1100. Meter otra cuota por un celular te aprieta y te aleja de ahorrar y estudiar.
+        - generic [ref=e329]:
+          - paragraph [ref=e330]: Los números
+          - generic [ref=e332]:
+            - paragraph [ref=e333]: Satisfacción esperada
+            - generic [ref=e334]: "4"
+          - generic [ref=e338]:
+            - paragraph [ref=e339]: Impacto en solvencia
+            - generic [ref=e340]: "8"
+        - generic [ref=e347]:
+          - paragraph [ref=e348]: La alternativa
+          - paragraph [ref=e349]: Ahorra 3 meses con Bs 900 por mes y cómpralo sin crédito. Te quedas con margen y no sumas otra cuota a tus Bs 600 actuales.
+        - button "Ver los 3 factores que pesaron" [ref=e354] [cursor=pointer]:
+          - generic [ref=e355]: Ver los 3 factores que pesaron
+          - img [ref=e356]
+        - generic [ref=e358]:
+          - button "Decisión guardada" [ref=e359] [cursor=pointer]
+          - button "Consultar otra" [ref=e360] [cursor=pointer]
+    - region "Notifications alt+T"
+  - generic [ref=e29]:
+    - button "Menu" [ref=e361]:
+      - img [ref=e32]
+      - generic: Menu
+    - button "Inspect" [ref=e362]:
+      - img [ref=e38]
+      - generic: Inspect
+    - button "Audit" [ref=e363]:
+      - generic [ref=e41]:
+        - img [ref=e42]
+        - img [ref=e306]
+      - generic: Audit
+    - button "Settings" [ref=e364]:
+      - img [ref=e50]
+      - generic: Settings

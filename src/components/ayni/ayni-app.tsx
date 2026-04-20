@@ -164,7 +164,7 @@ function AppFrame({ children }: { children: ReactNode }) {
   return (
     <div
       className={cn(
-        "min-h-screen px-4 py-4 sm:px-6 sm:py-6",
+        "min-h-[100dvh] px-3 py-3 sm:px-6 sm:py-6",
         darkStage
           ? "bg-surface-dark"
           : "bg-[radial-gradient(circle_at_top,rgba(244,216,161,0.55),transparent_36%),radial-gradient(circle_at_bottom,rgba(196,74,37,0.1),transparent_30%),#FBFAF7]",
@@ -172,7 +172,7 @@ function AppFrame({ children }: { children: ReactNode }) {
     >
       <div
         className={cn(
-          "mx-auto min-h-[calc(100vh-2rem)] max-w-[440px] overflow-hidden rounded-[28px] border shadow-[0_18px_50px_rgba(26,31,46,0.08)] sm:min-h-[820px]",
+          "mx-auto min-h-[calc(100dvh-1.5rem)] max-w-[440px] overflow-hidden rounded-[28px] border shadow-[0_18px_50px_rgba(26,31,46,0.08)] sm:min-h-[min(820px,calc(100dvh-3rem))]",
           darkStage
             ? "border-white/10 bg-surface-dark"
             : "border-surface-line bg-surface-off-white",
@@ -496,7 +496,7 @@ function HomePage() {
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="w-[88%] border-surface-line bg-surface-off-white sm:max-w-sm"
+            className="w-[92vw] border-surface-line bg-surface-off-white sm:max-w-sm"
           >
             <SheetHeader className="px-6 pt-6">
               <SheetTitle className="font-serif text-2xl text-surface-ink">
@@ -506,7 +506,7 @@ function HomePage() {
                 Tu contexto y tus últimas decisiones viven acá.
               </SheetDescription>
             </SheetHeader>
-            <div className="flex flex-1 flex-col gap-6 px-6 pb-6">
+            <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 pb-6 sm:px-6">
               <Card className="border-surface-line bg-white">
                 <CardHeader className="pb-3">
                   <CardTitle className="font-serif text-xl">Mi contexto</CardTitle>
@@ -556,7 +556,7 @@ function HomePage() {
                             >
                               {record.response.verdict}
                             </div>
-                            <p className="font-serif text-base text-surface-ink">
+                            <p className="break-words font-serif text-base leading-snug text-surface-ink">
                               {getQuestionSnippet(record.question)}
                             </p>
                             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-surface-muted">
@@ -581,7 +581,7 @@ function HomePage() {
         </Sheet>
       </header>
 
-      <main className="flex flex-1 flex-col justify-center py-6 sm:py-8">
+      <main className="flex flex-1 flex-col justify-start py-6 sm:justify-center sm:py-8">
         <div className="space-y-6 text-center">
           <div className="space-y-3">
             <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
@@ -710,7 +710,7 @@ function HomePage() {
                       {getRelativeTime(record.timestamp)}
                     </p>
                   </div>
-                  <p className="font-serif text-xl text-surface-ink">
+                  <p className="break-words font-serif text-xl leading-snug text-surface-ink">
                     {getQuestionSnippet(record.question)}
                   </p>
                   <p className="text-sm text-surface-muted">
@@ -771,7 +771,7 @@ function AnalyzingPage() {
   }, [navigate]);
 
   return (
-    <div className="flex min-h-[calc(100vh-2rem)] items-center justify-center bg-surface-dark px-6 py-10 text-center text-white sm:min-h-[820px]">
+    <div className="flex min-h-[calc(100dvh-1.5rem)] items-center justify-center bg-surface-dark px-6 py-10 text-center text-white sm:min-h-[min(820px,calc(100dvh-3rem))]">
       <div className="space-y-8">
         <div className="flex items-center justify-center gap-3">
           {[0, 1, 2].map((dot, index) => (
@@ -940,7 +940,7 @@ function ResultPage() {
           <p className="mt-3 text-sm font-medium text-surface-slate">
             {verdictSummaryCopy[response.verdict]}
           </p>
-          <p className="mt-2 text-xs uppercase tracking-[0.12em] text-surface-muted">
+          <p className="mx-auto mt-2 max-w-[18rem] text-xs leading-relaxed uppercase tracking-[0.12em] text-surface-muted">
             {verdictConfidenceCopy[response.verdict]}
           </p>
         </motion.div>

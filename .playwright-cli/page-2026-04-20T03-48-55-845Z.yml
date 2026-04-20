@@ -1,0 +1,36 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - generic [ref=e8]: Paso 1 de 3
+          - heading "Primero, ¿cuánto ganas al mes más o menos?" [level=1] [ref=e9]
+          - paragraph [ref=e10]: Solo vive en tu teléfono. No se sube a ningún lado.
+        - generic [ref=e11]:
+          - generic [ref=e13]:
+            - textbox "4500" [ref=e14]
+            - generic [ref=e15]:
+              - button "Bs" [ref=e16] [cursor=pointer]
+              - button "USD" [ref=e17] [cursor=pointer]
+          - generic [ref=e19]:
+            - img [ref=e20]
+            - generic [ref=e23]: "Privacidad visible: tus datos se quedan acá, en tu navegador."
+      - generic [ref=e24]:
+        - button "Seguir →" [ref=e25] [cursor=pointer]
+        - button "Saltar con datos de ejemplo" [ref=e26] [cursor=pointer]
+    - region "Notifications alt+T"
+  - generic [ref=e29]:
+    - button "Menu" [ref=e30]:
+      - img [ref=e32]
+      - generic: Menu
+    - button "Inspect" [ref=e36]:
+      - img [ref=e38]
+      - generic: Inspect
+    - button "Audit" [ref=e40]:
+      - generic [ref=e41]:
+        - img [ref=e42]
+        - img [ref=e45]
+      - generic: Audit
+    - button "Settings" [ref=e48]:
+      - img [ref=e50]
+      - generic: Settings

@@ -1,0 +1,81 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e147]:
+      - button "Volver" [ref=e148] [cursor=pointer]:
+        - img [ref=e149]
+        - text: Volver
+      - generic [ref=e151]:
+        - generic [ref=e153]:
+          - img [ref=e154]
+          - generic [ref=e157]:
+            - paragraph [ref=e158]: 🔒 Todo esto vive solo en tu teléfono.
+            - paragraph [ref=e159]: Ayni no lo sube a ningún lado. Lo guardamos en tu navegador para que no tengas que repetirlo.
+        - generic [ref=e160]:
+          - heading "Mi contexto" [level=1] [ref=e161]
+          - paragraph [ref=e162]: Ajusta esto cuando tu realidad cambie. Eso mueve el veredicto.
+        - generic [ref=e163]:
+          - generic [ref=e165]:
+            - paragraph [ref=e166]: Ingreso
+            - paragraph [ref=e167]: Bs 4.500
+          - generic [ref=e169]:
+            - paragraph [ref=e170]: Comprometido
+            - paragraph [ref=e171]: Bs 3.400
+          - generic [ref=e173]:
+            - paragraph [ref=e174]: Libre hoy
+            - paragraph [ref=e175]: Bs 1.100
+        - generic [ref=e177]:
+          - generic [ref=e178]:
+            - text: Ingreso mensual
+            - textbox [ref=e179]: "4500"
+          - generic [ref=e180]:
+            - text: Gastos fijos
+            - textbox [ref=e181]: "2800"
+          - generic [ref=e182]:
+            - paragraph [ref=e183]: Te queda hoy
+            - paragraph [ref=e184]: Bs 1.100
+            - paragraph [ref=e185]: Si cambias ingreso, gastos o deudas, este número se actualiza al instante.
+        - generic [ref=e187]:
+          - generic [ref=e188]:
+            - img [ref=e189]
+            - paragraph [ref=e191]: Deudas activas
+          - generic [ref=e193]:
+            - generic [ref=e194]:
+              - paragraph [ref=e195]: universidad
+              - paragraph [ref=e196]: Bs 600
+            - button [ref=e197] [cursor=pointer]:
+              - img [ref=e198]
+          - generic [ref=e201]:
+            - textbox "nombre" [ref=e202]
+            - textbox "cuota" [ref=e203]
+            - button [ref=e204] [cursor=pointer]:
+              - img
+        - generic [ref=e206]:
+          - generic [ref=e207]:
+            - img [ref=e208]
+            - paragraph [ref=e211]: Metas
+          - generic [ref=e212]:
+            - button "ahorrar" [ref=e213] [cursor=pointer]
+            - button "estudiar" [ref=e214] [cursor=pointer]
+            - button "emprender" [ref=e215] [cursor=pointer]
+            - button "vivienda" [ref=e216] [cursor=pointer]
+            - button "viaje" [ref=e217] [cursor=pointer]
+            - button "familia" [ref=e218] [cursor=pointer]
+            - button "salir de deudas" [ref=e219] [cursor=pointer]
+            - button "invertir" [ref=e220] [cursor=pointer]
+        - button "Guardar y volver" [ref=e221] [cursor=pointer]
+    - region "Notifications alt+T"
+  - generic [ref=e29]:
+    - button "Menu" [ref=e30]:
+      - img [ref=e32]
+      - generic: Menu
+    - button "Inspect" [ref=e36]:
+      - img [ref=e38]
+      - generic: Inspect
+    - button "Audit" [ref=e40]:
+      - generic [ref=e41]:
+        - img [ref=e42]
+        - img [ref=e145]
+      - generic: Audit
+    - button "Settings" [ref=e48]:
+      - img [ref=e50]
+      - generic: Settings

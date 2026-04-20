@@ -1,0 +1,83 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - banner:
+            - generic:
+              - text: Ayni
+              - paragraph: Segunda opinión financiera, al momento de decidir.
+            - button [expanded]:
+              - img
+              - generic: Abrir menú
+          - main:
+            - generic:
+              - generic:
+                - paragraph: Contexto activo
+                - heading [level=1]: ¿Qué decisión estás pensando?
+                - paragraph: Te quedan libres Bs 1.100 este mes.
+              - generic:
+                - generic:
+                  - textbox
+                  - generic:
+                    - generic: ¿acepto el préstamo de la cooperativa?
+                  - button: Ver
+                - paragraph: "Ejemplo: crédito, pasanaku, préstamo, viaje."
+              - generic:
+                - button: ¿compro el celular a crédito de Bs 3500?
+                - button: ¿me sumo al pasanaku de Bs 300 al mes?
+                - button: ¿acepto el préstamo de Bs 8000 de la cooperativa para emprender?
+                - button: ¿me animo al viaje con los panas?
+          - generic:
+            - generic:
+              - heading [level=2]: Últimas consultas
+              - button: Ver todas
+            - generic:
+              - button:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: ESPERA
+                      - paragraph: hace 2 min
+                    - paragraph: compro el celular a crédito de Bs …
+                    - paragraph: Con Bs 4500 al mes, Bs 2800 en gastos fijos y Bs 600 ya comprometidos, te quedan Bs 1100. Meter otra cuota por un celular te aprieta y te aleja de ahorrar y estudiar.
+        - region "Notifications alt+T"
+  - generic [ref=e29]:
+    - button [ref=e262]:
+      - img [ref=e32]
+      - generic: Menu
+    - button [ref=e263]:
+      - img [ref=e38]
+      - generic: Inspect
+    - button [ref=e264]:
+      - generic [ref=e41]:
+        - img [ref=e42]
+        - img [ref=e302]
+      - generic: Audit
+    - button [ref=e267]:
+      - img [ref=e50]
+      - generic: Settings
+  - dialog "Ayni" [ref=e269]:
+    - generic [ref=e270]:
+      - heading "Ayni" [level=2] [ref=e271]
+      - paragraph [ref=e272]: Tu contexto y tus últimas decisiones viven acá.
+    - generic [ref=e273]:
+      - generic [ref=e274]:
+        - generic [ref=e276]: Mi contexto
+        - generic [ref=e277]:
+          - paragraph [ref=e278]: "Ingreso: Bs 4.500"
+          - paragraph [ref=e279]: "Gastos fijos: Bs 2.800"
+          - paragraph [ref=e280]: "Te queda libre: Bs 1.100"
+          - button "Ver o editar contexto" [active] [ref=e281] [cursor=pointer]
+      - generic [ref=e282]:
+        - heading "Consultas pasadas" [level=2] [ref=e283]
+        - generic [ref=e287]:
+          - button "ESPERA compro el celular a crédito de Bs … hace 2 min" [ref=e288] [cursor=pointer]:
+            - generic [ref=e289]: ESPERA
+            - paragraph [ref=e290]: compro el celular a crédito de Bs …
+            - paragraph [ref=e291]: hace 2 min
+          - button [ref=e292] [cursor=pointer]:
+            - img [ref=e293]
+    - button "Close" [ref=e296] [cursor=pointer]:
+      - img
+      - generic [ref=e297]: Close

@@ -1,0 +1,55 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e224]:
+      - banner [ref=e225]:
+        - generic [ref=e226]:
+          - text: Ayni
+          - paragraph [ref=e227]: Segunda opinión financiera, al momento de decidir.
+        - button "Abrir menú" [ref=e228] [cursor=pointer]:
+          - img [ref=e229]
+          - generic [ref=e230]: Abrir menú
+      - main [ref=e231]:
+        - generic [ref=e232]:
+          - generic [ref=e233]:
+            - paragraph [ref=e234]: Contexto activo
+            - heading "¿Qué decisión estás pensando?" [level=1] [ref=e235]
+            - paragraph [ref=e236]: Te quedan libres Bs 1.100 este mes.
+          - generic [ref=e237]:
+            - generic [ref=e238]:
+              - textbox [ref=e239]
+              - generic:
+                - generic: ¿compro el celular a crédito?
+              - button "Ver" [ref=e240] [cursor=pointer]
+            - paragraph [ref=e241]: "Ejemplo: crédito, pasanaku, préstamo, viaje."
+          - generic [ref=e242]:
+            - button "¿compro el celular a crédito de Bs 3500?" [ref=e243] [cursor=pointer]
+            - button "¿me sumo al pasanaku de Bs 300 al mes?" [ref=e244] [cursor=pointer]
+            - button "¿acepto el préstamo de Bs 8000 de la cooperativa para emprender?" [ref=e245] [cursor=pointer]
+            - button "¿me animo al viaje con los panas?" [ref=e246] [cursor=pointer]
+      - generic [ref=e247]:
+        - generic [ref=e248]:
+          - heading "Últimas consultas" [level=2] [ref=e249]
+          - button "Ver todas" [ref=e250] [cursor=pointer]
+        - button "ESPERA hace 1 min compro el celular a crédito de Bs … Con Bs 4500 al mes, Bs 2800 en gastos fijos y Bs 600 ya comprometidos, te quedan Bs 1100. Meter otra cuota por un celular te aprieta y te aleja de ahorrar y estudiar." [ref=e252] [cursor=pointer]:
+          - generic [ref=e254]:
+            - generic [ref=e255]:
+              - generic [ref=e256]: ESPERA
+              - paragraph [ref=e257]: hace 1 min
+            - paragraph [ref=e258]: compro el celular a crédito de Bs …
+            - paragraph [ref=e259]: Con Bs 4500 al mes, Bs 2800 en gastos fijos y Bs 600 ya comprometidos, te quedan Bs 1100. Meter otra cuota por un celular te aprieta y te aleja de ahorrar y estudiar.
+    - region "Notifications alt+T"
+  - generic [ref=e29]:
+    - button "Menu" [ref=e30]:
+      - img [ref=e32]
+      - generic: Menu
+    - button "Inspect" [ref=e36]:
+      - img [ref=e38]
+      - generic: Inspect
+    - button "Audit" [ref=e40]:
+      - generic [ref=e41]:
+        - img [ref=e42]
+        - img [ref=e222]
+      - generic: Audit
+    - button "Settings" [ref=e48]:
+      - img [ref=e50]
+      - generic: Settings
