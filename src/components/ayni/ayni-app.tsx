@@ -591,17 +591,13 @@ function HomePage() {
               ¿Qué decisión estás pensando?
             </h1>
             {context && (
-              <div className="mx-auto max-w-sm rounded-2xl border border-surface-line bg-white/90 p-5 shadow-sm backdrop-blur-sm">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
-                  Tu margen este mes
-                </p>
-                <p className="mt-2 break-words font-serif text-4xl font-bold leading-none text-brand-forest sm:text-5xl">
+              <p className="mx-auto max-w-sm text-sm text-surface-muted">
+                Te quedan libres{" "}
+                <span className="font-semibold text-surface-ink">
                   {formatCurrency(freeCash, context.currency_pref)}
-                </p>
-                <p className="mt-2 text-sm text-surface-muted">
-                  Después de gastos fijos y deudas, esto es lo que de verdad te queda para decidir.
-                </p>
-              </div>
+                </span>{" "}
+                este mes.
+              </p>
             )}
           </div>
 
