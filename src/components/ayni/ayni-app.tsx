@@ -45,6 +45,7 @@ import {
   getPendingQuestion,
   getStoredContext,
   getStoredRecords,
+  hasSimilarConsultRecord,
   removeConsultRecord,
   saveConsultRecord,
   saveStoredContext,
@@ -95,6 +96,13 @@ const verdictSummaryCopy: Record<AyniResponse["verdict"], string> = {
   CUIDADO: "Puede servirte, pero solo si lo haces con condiciones claras.",
 };
 
+const verdictConfidenceCopy: Record<AyniResponse["verdict"], string> = {
+  ESPERA: "Basado en lo que ganas, gastas y ya tienes comprometido.",
+  ADELANTE: "Basado en tu margen actual y en que no te rompe el mes.",
+  CUIDADO:
+    "Basado en tu margen actual y en que esto solo conviene con condiciones claras.",
+};
+
 function formatCurrency(value: number, currency: "BS" | "USD" = "BS") {
   if (!Number.isFinite(value)) return currency === "USD" ? "$0" : "Bs 0";
   const rounded = Math.round(value);
@@ -128,6 +136,11 @@ function getRelativeTime(timestamp: number) {
 
   const diffDays = Math.round(diffHours / 24);
   return `hace ${diffDays} d`;
+}
+
+function getQuestionSnippet(question: string) {
+  const clean = question.replace(/[¿?]/g, "").replace(/\s+/g, " ").trim();
+  return clean.length > 34 ? `${clean.slice(0, 34)}…` : clean;
 }
 
 function useRotatingIndex(length: number, intervalMs: number) {
@@ -413,10 +426,12 @@ function OnboardingPage() {
 
 function HomePage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [context, setContext] = useState<UserContext | null>(null);
   const [question, setQuestion] = useState("");
   const [records, setRecords] = useState<ConsultRecord[]>([]);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [activeSuggestion, setActiveSuggestion] = useState<string | null>(null);
   const placeholderIndex = useRotatingIndex(ROTATING_PLACEHOLDERS.length, 3000);
 
   useEffect(() => {
@@ -428,7 +443,7 @@ function HomePage() {
 
     setContext(stored);
     setRecords(getStoredRecords());
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   function handleSubmit(event?: FormEvent) {
     event?.preventDefault();
@@ -444,6 +459,16 @@ function HomePage() {
   function handleRemoveRecord(id: string) {
     removeConsultRecord(id);
     setRecords(getStoredRecords());
+  }
+
+  function openSavedResult(record: ConsultRecord) {
+    const nextState = {
+      question: record.question,
+      response: record.response,
+    };
+    setLastResult(nextState);
+    setSheetOpen(false);
+    navigate("/result", { state: nextState });
   }
 
   const freeCash = context ? getFreeCash(context) : 0;
@@ -518,7 +543,11 @@ function HomePage() {
                     <Card key={record.id} className="border-surface-line bg-white">
                       <CardContent className="space-y-2 p-4">
                         <div className="flex items-start justify-between gap-3">
-                          <div className="space-y-1">
+                          <button
+                            type="button"
+                            onClick={() => openSavedResult(record)}
+                            className="min-w-0 flex-1 space-y-2 text-left"
+                          >
                             <div
                               className={cn(
                                 "inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em]",
@@ -527,8 +556,13 @@ function HomePage() {
                             >
                               {record.response.verdict}
                             </div>
-                            <p className="text-sm text-surface-slate">{record.question}</p>
-                          </div>
+                            <p className="font-serif text-base text-surface-ink">
+                              {getQuestionSnippet(record.question)}
+                            </p>
+                            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-surface-muted">
+                              {getRelativeTime(record.timestamp)}
+                            </p>
+                          </button>
                           <button
                             type="button"
                             onClick={() => handleRemoveRecord(record.id)}
@@ -601,6 +635,9 @@ function HomePage() {
                 Ver
               </button>
             </div>
+            <p className="px-2 text-left text-sm text-surface-muted">
+              Ejemplo: crédito, pasanaku, préstamo, viaje.
+            </p>
           </form>
 
           <div className="flex flex-wrap justify-center gap-3">
@@ -608,8 +645,16 @@ function HomePage() {
               <button
                 key={suggestion}
                 type="button"
-                onClick={() => setQuestion(suggestion)}
-                className="rounded-full border border-surface-line bg-white px-4 py-3 text-sm text-surface-slate shadow-sm transition-colors hover:border-brand-terracotta hover:text-brand-terracotta"
+                onClick={() => {
+                  setQuestion(suggestion);
+                  setActiveSuggestion(suggestion);
+                  window.setTimeout(() => setActiveSuggestion(null), 350);
+                }}
+                className={cn(
+                  "rounded-full border border-surface-line bg-white px-4 py-3 text-sm text-surface-slate shadow-sm transition-all hover:border-brand-terracotta hover:text-brand-terracotta",
+                  activeSuggestion === suggestion &&
+                    "border-brand-terracotta bg-brand-gold-soft text-brand-terracotta shadow-md",
+                )}
               >
                 {suggestion}
               </button>
@@ -643,33 +688,41 @@ function HomePage() {
             </Card>
           )}
           {records.map((record) => (
-            <Card
+            <button
               key={record.id}
-              className="min-w-[230px] border-surface-line bg-white shadow-sm sm:min-w-[260px]"
+              type="button"
+              onClick={() => openSavedResult(record)}
+              className="min-w-[230px] text-left sm:min-w-[260px]"
             >
-              <CardContent className="space-y-3 p-5">
-                <div
-                  className={cn(
-                    "inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em]",
-                    record.response.verdict === "ESPERA" &&
-                      "bg-brand-terracotta text-white",
-                    record.response.verdict === "ADELANTE" &&
-                      "bg-brand-forest text-white",
-                    record.response.verdict === "CUIDADO" &&
-                      "bg-brand-gold-soft text-surface-ink",
-                  )}
-                >
-                  {record.response.verdict}
-                </div>
-                <p className="font-serif text-xl text-surface-ink">{record.question}</p>
-                <p className="text-sm text-surface-muted">
-                  {record.response.reasoning}
-                </p>
-                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-surface-muted">
-                  {getRelativeTime(record.timestamp)}
-                </p>
-              </CardContent>
-            </Card>
+              <Card className="h-full border-surface-line bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand-terracotta/40 hover:shadow-md">
+                <CardContent className="space-y-3 p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div
+                      className={cn(
+                        "inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em]",
+                        record.response.verdict === "ESPERA" &&
+                          "bg-brand-terracotta text-white",
+                        record.response.verdict === "ADELANTE" &&
+                          "bg-brand-forest text-white",
+                        record.response.verdict === "CUIDADO" &&
+                          "bg-brand-gold-soft text-surface-ink",
+                      )}
+                    >
+                      {record.response.verdict}
+                    </div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-surface-muted">
+                      {getRelativeTime(record.timestamp)}
+                    </p>
+                  </div>
+                  <p className="font-serif text-xl text-surface-ink">
+                    {getQuestionSnippet(record.question)}
+                  </p>
+                  <p className="text-sm text-surface-muted">
+                    {record.response.reasoning}
+                  </p>
+                </CardContent>
+              </Card>
+            </button>
           ))}
         </div>
       </section>
@@ -722,8 +775,8 @@ function AnalyzingPage() {
   }, [navigate]);
 
   return (
-    <div className="flex min-h-full flex-col items-center justify-center bg-surface-dark px-6 text-center text-white">
-      <div className="space-y-10">
+    <div className="flex min-h-[calc(100vh-2rem)] items-center justify-center bg-surface-dark px-6 py-10 text-center text-white sm:min-h-[820px]">
+      <div className="space-y-8">
         <div className="flex items-center justify-center gap-3">
           {[0, 1, 2].map((dot, index) => (
             <motion.span
@@ -746,7 +799,7 @@ function AnalyzingPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25 }}
-              className="text-base text-surface-line"
+              className="mx-auto max-w-[18rem] text-base text-surface-line"
             >
               {ANALYZING_STEPS[stepIndex]}
             </motion.p>
@@ -804,6 +857,28 @@ function ResultPage() {
     }
   }, [navigate, routeState]);
 
+  useEffect(() => {
+    if (!routeState) return;
+
+    const alreadySaved = hasSimilarConsultRecord(
+      routeState.question,
+      routeState.response,
+    );
+
+    if (alreadySaved) {
+      setSaved(true);
+      return;
+    }
+
+    saveConsultRecord({
+      id: crypto.randomUUID(),
+      question: routeState.question,
+      response: routeState.response,
+      timestamp: Date.now(),
+    });
+    setSaved(true);
+  }, [routeState]);
+
   if (!routeState) {
     return null;
   }
@@ -855,9 +930,12 @@ function ResultPage() {
           transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
           className="text-center"
         >
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-brand-gold">
+            Veredicto
+          </p>
           <div
             className={cn(
-              "inline-flex max-w-full rounded-full px-6 py-3 text-3xl font-serif font-bold sm:px-10 sm:py-4 sm:text-5xl",
+              "inline-flex max-w-full rounded-full px-6 py-3 text-3xl font-serif font-bold shadow-[0_18px_40px_rgba(26,31,46,0.12)] sm:px-10 sm:py-4 sm:text-5xl",
               verdictStyles[response.verdict],
             )}
           >
@@ -865,6 +943,9 @@ function ResultPage() {
           </div>
           <p className="mt-3 text-sm font-medium text-surface-slate">
             {verdictSummaryCopy[response.verdict]}
+          </p>
+          <p className="mt-2 text-xs uppercase tracking-[0.12em] text-surface-muted">
+            {verdictConfidenceCopy[response.verdict]}
           </p>
         </motion.div>
 
@@ -987,7 +1068,7 @@ function ResultPage() {
             variant="outline"
             className="h-12 rounded-xl border-surface-line bg-white"
           >
-            {saved ? "Decisión guardada" : "Guardar decisión"}
+            {saved ? "Decisión guardada" : "Guardar otra vez"}
           </Button>
           <Button
             onClick={() => navigate("/")}
@@ -1061,6 +1142,10 @@ function ContextPage() {
   }
 
   const freeCash = getFreeCash(context);
+  const debtTotal = context.active_debts.reduce(
+    (sum, debt) => sum + debt.monthly_payment_bs,
+    0,
+  );
 
   return (
     <div className="min-h-full overflow-y-auto p-4 sm:p-6">
@@ -1095,6 +1180,42 @@ function ContextPage() {
           <p className="text-sm text-surface-muted">
             Ajusta esto cuando tu realidad cambie. Eso mueve el veredicto.
           </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <Card className="border-surface-line bg-white">
+            <CardContent className="space-y-2 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
+                Ingreso
+              </p>
+              <p className="font-serif text-2xl font-bold text-surface-ink">
+                {formatCurrency(context.monthly_income_bs, context.currency_pref)}
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="border-surface-line bg-white">
+            <CardContent className="space-y-2 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
+                Comprometido
+              </p>
+              <p className="font-serif text-2xl font-bold text-surface-ink">
+                {formatCurrency(
+                  context.fixed_expenses_bs + debtTotal,
+                  context.currency_pref,
+                )}
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="border-surface-line bg-white">
+            <CardContent className="space-y-2 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
+                Libre hoy
+              </p>
+              <p className="font-serif text-2xl font-bold text-brand-forest">
+                {formatCurrency(freeCash, context.currency_pref)}
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         <Card className="border-surface-line bg-white">
@@ -1139,6 +1260,9 @@ function ContextPage() {
               </p>
               <p className="mt-2 font-serif text-3xl font-bold text-brand-forest">
                 {formatCurrency(freeCash, context.currency_pref)}
+              </p>
+              <p className="mt-2 text-sm text-surface-muted">
+                Si cambias ingreso, gastos o deudas, este número se actualiza al instante.
               </p>
             </div>
           </CardContent>

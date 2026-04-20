@@ -40,8 +40,30 @@ export function getStoredRecords(): ConsultRecord[] {
 
 export function saveConsultRecord(record: ConsultRecord) {
   if (!canUseStorage()) return;
-  const next = [record, ...getStoredRecords()].slice(0, 5);
+  const deduped = getStoredRecords().filter(
+    (item) =>
+      !(
+        item.question.trim().toLowerCase() ===
+          record.question.trim().toLowerCase() &&
+        item.response.verdict === record.response.verdict &&
+        item.response.reasoning === record.response.reasoning
+      ),
+  );
+  const next = [record, ...deduped].slice(0, 5);
   window.localStorage.setItem(RECORDS_KEY, JSON.stringify(next));
+}
+
+export function hasSimilarConsultRecord(
+  question: string,
+  response: LastResultState["response"],
+) {
+  if (!canUseStorage()) return false;
+  return getStoredRecords().some(
+    (item) =>
+      item.question.trim().toLowerCase() === question.trim().toLowerCase() &&
+      item.response.verdict === response.verdict &&
+      item.response.reasoning === response.reasoning,
+  );
 }
 
 export function removeConsultRecord(id: string) {
