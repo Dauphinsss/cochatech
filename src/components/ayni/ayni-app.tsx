@@ -433,7 +433,7 @@ function HomePage() {
       <header className="flex items-center justify-between">
         <div>
           <span className="font-serif text-4xl font-bold text-brand-terracotta">
-            Ayni.
+            Ayni
           </span>
           <p className="mt-1 text-sm text-surface-muted">
             Segunda opinión financiera, al momento de decidir.
@@ -455,7 +455,7 @@ function HomePage() {
           >
             <SheetHeader className="px-6 pt-6">
               <SheetTitle className="font-serif text-2xl text-surface-ink">
-                Ayni.
+                Ayni
               </SheetTitle>
               <SheetDescription>
                 Tu contexto y tus últimas decisiones viven acá.
@@ -703,7 +703,7 @@ function AnalyzingPage() {
           ))}
         </div>
         <div className="space-y-3">
-          <p className="font-serif text-4xl font-bold">Ayni.</p>
+          <p className="font-serif text-4xl font-bold">Ayni</p>
           <AnimatePresence mode="wait">
             <motion.p
               key={stepIndex}
