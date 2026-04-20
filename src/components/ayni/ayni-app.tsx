@@ -89,6 +89,12 @@ const layerIcons: Record<Layer, typeof WalletIcon> = {
   personal: UserRoundIcon,
 };
 
+const verdictSummaryCopy: Record<AyniResponse["verdict"], string> = {
+  ESPERA: "Te da gusto hoy, pero te aprieta el próximo mes.",
+  ADELANTE: "Sí entra en tu realidad actual y no te desordena.",
+  CUIDADO: "Puede servirte, pero solo si lo haces con condiciones claras.",
+};
+
 function formatCurrency(value: number, currency: "BS" | "USD" = "BS") {
   if (!Number.isFinite(value)) return currency === "USD" ? "$0" : "Bs 0";
   const rounded = Math.round(value);
@@ -108,6 +114,20 @@ function getFreeCash(context: UserContext) {
     0,
   );
   return context.monthly_income_bs - context.fixed_expenses_bs - debtTotal;
+}
+
+function getRelativeTime(timestamp: number) {
+  const diffMs = Date.now() - timestamp;
+  const diffMin = Math.round(diffMs / 60000);
+
+  if (diffMin < 1) return "hace un momento";
+  if (diffMin < 60) return `hace ${diffMin} min`;
+
+  const diffHours = Math.round(diffMin / 60);
+  if (diffHours < 24) return `hace ${diffHours} h`;
+
+  const diffDays = Math.round(diffHours / 24);
+  return `hace ${diffDays} d`;
 }
 
 function useRotatingIndex(length: number, intervalMs: number) {
@@ -244,13 +264,13 @@ function OnboardingPage() {
   }
 
   return (
-    <div className="flex min-h-full flex-col justify-between p-6">
+    <div className="flex min-h-full flex-col justify-between p-4 sm:p-6">
       <div className="space-y-6">
         <div className="space-y-2">
           <span className="font-sans text-xs font-semibold uppercase tracking-[0.15em] text-brand-terracotta">
             Paso {step} de 3
           </span>
-          <h1 className="font-serif text-4xl font-bold leading-tight text-surface-ink">
+          <h1 className="font-serif text-3xl font-bold leading-tight text-surface-ink sm:text-4xl">
             {step === 1 &&
               "Primero, ¿cuánto ganas al mes más o menos?"}
             {step === 2 && "¿Cuánto se te va sí o sí cada mes?"}
@@ -267,20 +287,20 @@ function OnboardingPage() {
         {step === 1 && (
           <div className="space-y-4">
             <div className="rounded-2xl border border-surface-line bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Input
                   value={income}
                   onChange={(event) => setIncome(event.target.value)}
                   inputMode="numeric"
                   placeholder="4500"
-                  className="h-16 border-0 bg-transparent px-0 text-4xl font-serif font-bold text-surface-ink shadow-none focus-visible:ring-0"
+                  className="h-16 min-w-0 border-0 bg-transparent px-0 text-3xl font-serif font-bold text-surface-ink shadow-none focus-visible:ring-0 sm:text-4xl"
                 />
-                <div className="flex rounded-full border border-surface-line bg-surface-off-white p-1">
+                <div className="flex w-full rounded-full border border-surface-line bg-surface-off-white p-1 sm:w-auto">
                   <button
                     type="button"
                     onClick={() => setCurrency("BS")}
                     className={cn(
-                      "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
+                      "flex-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors sm:flex-none",
                       currency === "BS"
                         ? "bg-brand-terracotta text-white"
                         : "text-surface-muted",
@@ -292,7 +312,7 @@ function OnboardingPage() {
                     type="button"
                     onClick={() => setCurrency("USD")}
                     className={cn(
-                      "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
+                      "flex-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors sm:flex-none",
                       currency === "USD"
                         ? "bg-brand-terracotta text-white"
                         : "text-surface-muted",
@@ -320,7 +340,7 @@ function OnboardingPage() {
                 onChange={(event) => setExpenses(event.target.value)}
                 inputMode="numeric"
                 placeholder="2800"
-                className="h-16 border-0 bg-transparent px-0 text-4xl font-serif font-bold text-surface-ink shadow-none focus-visible:ring-0"
+                className="h-16 border-0 bg-transparent px-0 text-3xl font-serif font-bold text-surface-ink shadow-none focus-visible:ring-0 sm:text-4xl"
               />
             </div>
             <div className="rounded-xl border border-surface-line bg-white p-4">
@@ -429,13 +449,13 @@ function HomePage() {
   const freeCash = context ? getFreeCash(context) : 0;
 
   return (
-    <div className="flex min-h-full flex-col p-6">
-      <header className="flex items-center justify-between">
-        <div>
-          <span className="font-serif text-4xl font-bold text-brand-terracotta">
+    <div className="flex min-h-full flex-col p-4 sm:p-6">
+      <header className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <span className="font-serif text-3xl font-bold text-brand-terracotta sm:text-4xl">
             Ayni
           </span>
-          <p className="mt-1 text-sm text-surface-muted">
+          <p className="mt-1 max-w-[14rem] text-sm text-surface-muted sm:max-w-none">
             Segunda opinión financiera, al momento de decidir.
           </p>
         </div>
@@ -527,32 +547,39 @@ function HomePage() {
         </Sheet>
       </header>
 
-      <main className="flex flex-1 flex-col justify-center py-8">
+      <main className="flex flex-1 flex-col justify-center py-6 sm:py-8">
         <div className="space-y-6 text-center">
           <div className="space-y-3">
             <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
               Contexto activo
             </p>
-            <h1 className="font-serif text-4xl font-bold leading-tight text-surface-ink">
+            <h1 className="font-serif text-3xl font-bold leading-tight text-surface-ink sm:text-4xl">
               ¿Qué decisión estás pensando?
             </h1>
             {context && (
-              <p className="mx-auto max-w-sm text-sm text-surface-muted">
-                Hoy te quedan {formatCurrency(freeCash, context.currency_pref)} libres
-                al mes después de gastos y deudas.
-              </p>
+              <div className="mx-auto max-w-sm rounded-2xl border border-surface-line bg-white/90 p-5 shadow-sm backdrop-blur-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
+                  Tu margen este mes
+                </p>
+                <p className="mt-2 break-words font-serif text-4xl font-bold leading-none text-brand-forest sm:text-5xl">
+                  {formatCurrency(freeCash, context.currency_pref)}
+                </p>
+                <p className="mt-2 text-sm text-surface-muted">
+                  Después de gastos fijos y deudas, esto es lo que de verdad te queda para decidir.
+                </p>
+              </div>
             )}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative overflow-hidden rounded-full border border-surface-line bg-white px-5 shadow-sm transition-shadow hover:shadow-md">
+            <div className="relative overflow-hidden rounded-[1.75rem] border border-surface-line bg-white px-4 py-2 shadow-sm transition-shadow hover:shadow-md sm:rounded-full sm:px-5 sm:py-0">
               <Input
                 value={question}
                 onChange={(event) => setQuestion(event.target.value)}
-                className="h-16 border-0 bg-transparent px-0 pr-12 text-base shadow-none focus-visible:ring-0"
+                className="h-12 border-0 bg-transparent px-0 pr-0 text-base shadow-none focus-visible:ring-0 sm:h-16 sm:pr-12"
               />
               {!question && (
-                <div className="pointer-events-none absolute inset-y-0 left-5 right-16 flex items-center overflow-hidden text-left">
+                <div className="pointer-events-none absolute left-4 right-4 top-1/2 flex -translate-y-1/2 items-center overflow-hidden pr-24 text-left sm:inset-y-0 sm:left-5 sm:right-16 sm:translate-y-0 sm:pr-0">
                   <AnimatePresence mode="wait">
                     <motion.span
                       key={placeholderIndex}
@@ -569,7 +596,7 @@ function HomePage() {
               )}
               <button
                 type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-brand-terracotta px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-terracotta-deep"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-brand-terracotta px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-terracotta-deep sm:right-3"
               >
                 Ver
               </button>
@@ -592,8 +619,8 @@ function HomePage() {
       </main>
 
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="font-serif text-2xl font-bold text-surface-ink">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="min-w-0 font-serif text-xl font-bold text-surface-ink sm:text-2xl">
             Últimas consultas
           </h2>
           <button
@@ -606,7 +633,7 @@ function HomePage() {
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {records.length === 0 && (
-            <Card className="min-w-[260px] border-dashed border-surface-line bg-white">
+            <Card className="min-w-[230px] border-dashed border-surface-line bg-white sm:min-w-[260px]">
               <CardContent className="space-y-2 p-5">
                 <p className="font-serif text-xl text-surface-ink">Todavía vacío</p>
                 <p className="text-sm text-surface-muted">
@@ -618,7 +645,7 @@ function HomePage() {
           {records.map((record) => (
             <Card
               key={record.id}
-              className="min-w-[260px] border-surface-line bg-white shadow-sm"
+              className="min-w-[230px] border-surface-line bg-white shadow-sm sm:min-w-[260px]"
             >
               <CardContent className="space-y-3 p-5">
                 <div
@@ -637,6 +664,9 @@ function HomePage() {
                 <p className="font-serif text-xl text-surface-ink">{record.question}</p>
                 <p className="text-sm text-surface-muted">
                   {record.response.reasoning}
+                </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-surface-muted">
+                  {getRelativeTime(record.timestamp)}
                 </p>
               </CardContent>
             </Card>
@@ -797,7 +827,7 @@ function ResultPage() {
   }
 
   return (
-    <div className="min-h-full overflow-y-auto p-6">
+    <div className="min-h-full overflow-y-auto p-4 sm:p-6">
       <button
         type="button"
         onClick={() => navigate("/")}
@@ -808,11 +838,16 @@ function ResultPage() {
       </button>
 
       <div className="mt-6 space-y-6">
-        <div className="space-y-3">
-          <p className="font-serif text-3xl italic text-surface-ink">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          className="space-y-3"
+        >
+          <p className="font-serif text-2xl italic leading-tight text-surface-ink sm:text-3xl">
             {response.restated_question || question}
           </p>
-        </div>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
@@ -822,99 +857,131 @@ function ResultPage() {
         >
           <div
             className={cn(
-              "inline-flex rounded-full px-10 py-4 text-5xl font-serif font-bold",
+              "inline-flex max-w-full rounded-full px-6 py-3 text-3xl font-serif font-bold sm:px-10 sm:py-4 sm:text-5xl",
               verdictStyles[response.verdict],
             )}
           >
-            {response.verdict}
+            <span className="break-words">{response.verdict}</span>
           </div>
+          <p className="mt-3 text-sm font-medium text-surface-slate">
+            {verdictSummaryCopy[response.verdict]}
+          </p>
         </motion.div>
 
-        <Card className="border-surface-line bg-white">
-          <CardContent className="space-y-3 p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
-              El por qué
-            </p>
-            <p className="text-lg leading-relaxed text-surface-ink">
-              {response.reasoning}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-surface-line bg-white">
-          <CardContent className="space-y-5 p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
-              Los números
-            </p>
-            <AnimatedMetric
-              label="Satisfacción esperada"
-              value={response.satisfaction_score}
-              colorClass="bg-brand-forest"
-            />
-            <AnimatedMetric
-              label="Impacto en solvencia"
-              value={response.solvency_impact}
-              colorClass="bg-brand-terracotta"
-            />
-          </CardContent>
-        </Card>
-
-        <Card className="border-brand-gold/40 bg-brand-gold-soft">
-          <CardContent className="flex gap-4 p-6">
-            <div className="w-1 rounded-full bg-brand-gold" />
-            <div className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-terracotta">
-                La alternativa
-              </p>
-              <p className="text-lg text-surface-ink">{response.alternative}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Collapsible open={openFactors} onOpenChange={setOpenFactors}>
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut", delay: 0.34 }}
+        >
           <Card className="border-surface-line bg-white">
-            <CardContent className="p-0">
-              <CollapsibleTrigger asChild>
-                <button
-                  type="button"
-                  className="flex w-full items-center justify-between px-6 py-5 text-left"
-                >
-                  <span className="text-base text-surface-ink">
-                    Ver los 3 factores que pesaron
-                  </span>
-                  <ChevronDownIcon
-                    className={cn(
-                      "size-4 text-surface-muted transition-transform",
-                      openFactors && "rotate-180",
-                    )}
-                  />
-                </button>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="space-y-4 border-t border-surface-line px-6 py-5">
-                  {response.factors.map((factor) => {
-                    const Icon = layerIcons[factor.layer];
-                    return (
-                      <div key={`${factor.layer}-${factor.note}`} className="flex gap-3">
-                        <div className="rounded-full bg-surface-off-white p-2">
-                          <Icon className="size-4 text-brand-terracotta" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold capitalize text-surface-ink">
-                            {factor.layer}
-                          </p>
-                          <p className="text-sm text-surface-slate">{factor.note}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CollapsibleContent>
+            <CardContent className="space-y-3 p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
+                El por qué
+              </p>
+              <p className="text-lg leading-relaxed text-surface-ink">
+                {response.reasoning}
+              </p>
             </CardContent>
           </Card>
-        </Collapsible>
+        </motion.div>
 
-        <div className="flex flex-col gap-3 pb-6">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut", delay: 0.44 }}
+        >
+          <Card className="border-surface-line bg-white">
+            <CardContent className="space-y-5 p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-gold">
+                Los números
+              </p>
+              <AnimatedMetric
+                label="Satisfacción esperada"
+                value={response.satisfaction_score}
+                colorClass="bg-brand-forest shadow-[0_0_18px_rgba(27,90,85,0.18)]"
+              />
+              <AnimatedMetric
+                label="Impacto en solvencia"
+                value={response.solvency_impact}
+                colorClass="bg-brand-terracotta shadow-[0_0_18px_rgba(196,74,37,0.18)]"
+              />
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut", delay: 0.54 }}
+        >
+          <Card className="border-brand-gold/40 bg-brand-gold-soft">
+            <CardContent className="flex gap-3 p-5 sm:gap-4 sm:p-6">
+              <div className="w-1 rounded-full bg-brand-gold" />
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-terracotta">
+                  La alternativa
+                </p>
+                <p className="text-lg text-surface-ink">{response.alternative}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut", delay: 0.62 }}
+        >
+          <Collapsible open={openFactors} onOpenChange={setOpenFactors}>
+            <Card className="border-surface-line bg-white">
+              <CardContent className="p-0">
+                <CollapsibleTrigger asChild>
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left sm:px-6 sm:py-5"
+                  >
+                    <span className="text-sm text-surface-ink sm:text-base">
+                      Ver los 3 factores que pesaron
+                    </span>
+                    <ChevronDownIcon
+                      className={cn(
+                        "size-4 text-surface-muted transition-transform",
+                        openFactors && "rotate-180",
+                      )}
+                    />
+                  </button>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="space-y-4 border-t border-surface-line px-5 py-4 sm:px-6 sm:py-5">
+                    {response.factors.map((factor) => {
+                      const Icon = layerIcons[factor.layer];
+                      return (
+                        <div key={`${factor.layer}-${factor.note}`} className="flex items-start gap-3">
+                          <div className="rounded-full bg-surface-off-white p-2">
+                            <Icon className="size-4 text-brand-terracotta" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold capitalize text-surface-ink">
+                              {factor.layer}
+                            </p>
+                            <p className="text-sm text-surface-slate">{factor.note}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CollapsibleContent>
+              </CardContent>
+            </Card>
+          </Collapsible>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut", delay: 0.7 }}
+          className="flex flex-col gap-3 pb-6"
+        >
           <Button
             onClick={handleSaveDecision}
             variant="outline"
@@ -928,7 +995,7 @@ function ResultPage() {
           >
             Consultar otra
           </Button>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -996,7 +1063,7 @@ function ContextPage() {
   const freeCash = getFreeCash(context);
 
   return (
-    <div className="min-h-full overflow-y-auto p-6">
+    <div className="min-h-full overflow-y-auto p-4 sm:p-6">
       <button
         type="button"
         onClick={() => navigate("/")}
@@ -1022,7 +1089,7 @@ function ContextPage() {
         </div>
 
         <div className="space-y-2">
-          <h1 className="font-serif text-4xl font-bold text-surface-ink">
+          <h1 className="font-serif text-3xl font-bold text-surface-ink sm:text-4xl">
             Mi contexto
           </h1>
           <p className="text-sm text-surface-muted">
@@ -1095,9 +1162,9 @@ function ContextPage() {
               {context.active_debts.map((debt, index) => (
                 <div
                   key={`${debt.name}-${index}`}
-                  className="flex items-center justify-between rounded-xl border border-surface-line p-4"
+                  className="flex items-start justify-between gap-3 rounded-xl border border-surface-line p-4"
                 >
-                  <div>
+                  <div className="min-w-0">
                     <p className="font-medium text-surface-ink">{debt.name}</p>
                     <p className="text-sm text-surface-muted">
                       {formatCurrency(debt.monthly_payment_bs)}
@@ -1114,24 +1181,24 @@ function ContextPage() {
               ))}
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <Input
                 value={customDebtName}
                 onChange={(event) => setCustomDebtName(event.target.value)}
                 placeholder="nombre"
-                className="h-12 rounded-xl border-surface-line"
+                className="h-12 min-w-0 rounded-xl border-surface-line"
               />
               <Input
                 value={customDebtPayment}
                 onChange={(event) => setCustomDebtPayment(event.target.value)}
                 inputMode="numeric"
                 placeholder="cuota"
-                className="h-12 w-28 rounded-xl border-surface-line"
+                className="h-12 w-full rounded-xl border-surface-line sm:w-28"
               />
               <Button
                 onClick={addDebt}
                 variant="outline"
-                className="h-12 rounded-xl border-surface-line"
+                className="h-12 w-full rounded-xl border-surface-line sm:w-auto"
               >
                 <PlusIcon className="size-4" />
               </Button>
