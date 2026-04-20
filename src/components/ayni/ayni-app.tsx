@@ -498,10 +498,15 @@ function HomePage() {
                     <Card key={record.id} className="border-surface-line bg-white">
                       <CardContent className="space-y-2 p-4">
                         <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <p className="font-serif text-lg text-surface-ink">
+                          <div className="space-y-1">
+                            <div
+                              className={cn(
+                                "inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em]",
+                                verdictStyles[record.response.verdict],
+                              )}
+                            >
                               {record.response.verdict}
-                            </p>
+                            </div>
                             <p className="text-sm text-surface-slate">{record.question}</p>
                           </div>
                           <button
@@ -823,7 +828,6 @@ function ResultPage() {
           >
             {response.verdict}
           </div>
-          <p className="mt-3 text-sm text-surface-muted">{response.reasoning}</p>
         </motion.div>
 
         <Card className="border-surface-line bg-white">
